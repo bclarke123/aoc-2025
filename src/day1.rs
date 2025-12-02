@@ -1,10 +1,10 @@
 fn rotate(code: &str) -> (i32, i32) {
     let lr = code.starts_with('R');
+    let sign = if lr { 1 } else { -1 };
+
     let amt = code[1..]
         .parse::<i32>()
         .unwrap_or_else(|_| panic!("Couldn't parse {} as number", code));
-
-    let sign = if lr { 1 } else { -1 };
 
     (amt, sign)
 }
