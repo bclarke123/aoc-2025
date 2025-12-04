@@ -9,10 +9,9 @@ fn parse_board(input: &str) -> Vec<Vec<usize>> {
         .collect::<Vec<_>>()
 }
 
-fn do_day4p1(input: &str, max_around: usize) -> usize {
-    let board = parse_board(input);
-
+fn remove_rolls(board: Vec<Vec<usize>>, max_around: usize) -> (Vec<Vec<usize>>, usize) {
     let mut ret = 0;
+    let mut new_board = board.clone();
 
     for y in 0..board.len() {
         for x in 0..board[y].len() {
@@ -45,7 +44,31 @@ fn do_day4p1(input: &str, max_around: usize) -> usize {
 
             if neighbours < max_around {
                 ret += 1;
+                new_board[y][x] = 0;
             }
+        }
+    }
+
+    (new_board, ret)
+}
+
+fn do_day4p1(input: &str, max_around: usize) -> usize {
+    let board = parse_board(input);
+
+    remove_rolls(board, max_around).1
+}
+
+fn do_day4p2(input: &str, max_around: usize) -> usize {
+    let mut ret = 0;
+    let mut last_removed;
+    let mut board = parse_board(input);
+
+    loop {
+        (board, last_removed) = remove_rolls(board, max_around);
+        ret += last_removed;
+
+        if last_removed == 0 {
+            break;
         }
     }
 
@@ -59,11 +82,26 @@ pub fn day4_p1() {
     println!("The number of accessible rolls is {}", ret);
 }
 
+pub fn day4_p2() {
+    let input = include_str!("input/day4_input.txt");
+
+    let ret = do_day4p2(input, 4);
+    println!("The number of accessible rolls is {}", ret);
+}
+
 #[test]
 fn test_day4p1() {
     let input = include_str!("input/day4_example.txt");
 
     let ret = do_day4p1(input, 4);
-
     assert_eq!(ret, 13);
+}
+
+#[test]
+fn test_day4p2() {
+    let input = include_str!("input/day4_example.txt");
+
+    let ret = do_day4p2(input, 4);
+
+    assert_eq!(ret, 43);
 }
