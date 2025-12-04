@@ -102,6 +102,5 @@ fn test_day4p2() {
     let input = include_str!("input/day4_example.txt");
 
     let ret = do_day4p2(input, 4);
-
     assert_eq!(ret, 43);
 }
