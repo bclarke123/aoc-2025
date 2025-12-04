@@ -47,14 +47,14 @@ fn do_day3p2(input: &str) -> u64 {
         .sum()
 }
 
-pub fn day3_p1() {
+pub fn p1() {
     let input = include_str!("input/day3_input.txt");
 
     let ret = do_day3p1(input);
     println!("The sum of maximum joltages (2) is {}", ret);
 }
 
-pub fn day3_p2() {
+pub fn p2() {
     let input = include_str!("input/day3_input.txt");
 
     let ret = do_day3p2(input);

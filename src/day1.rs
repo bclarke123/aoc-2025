@@ -54,14 +54,14 @@ pub fn do_day1_p2(input: &str) -> i32 {
     count
 }
 
-pub fn day1_p1() {
+pub fn p1() {
     let words = include_str!("input/day1_input.txt");
 
     let count = do_day1_p1(words);
     println!("Part 1: Count is {}", count);
 }
 
-pub fn day1_p2() {
+pub fn p2() {
     let words = include_str!("input/day1_input.txt");
 
     let count = do_day1_p2(words);

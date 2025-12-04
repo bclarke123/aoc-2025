@@ -76,14 +76,14 @@ fn do_day2p2(input: &str) -> u64 {
     ret
 }
 
-pub fn day2_p1() {
+pub fn p1() {
     let input = include_str!("input/day2_input.txt");
 
     let ret = do_day2p1(input);
     println!("The invalid codes add up to {}", ret);
 }
 
-pub fn day2_p2() {
+pub fn p2() {
     let input = include_str!("input/day2_input.txt");
 
     let ret = do_day2p2(input);

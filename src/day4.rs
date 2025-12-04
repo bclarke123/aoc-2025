@@ -75,14 +75,14 @@ fn do_day4p2(input: &str, max_around: usize) -> usize {
     ret
 }
 
-pub fn day4_p1() {
+pub fn p1() {
     let input = include_str!("input/day4_input.txt");
 
     let ret = do_day4p1(input, 4);
     println!("The number of accessible rolls is {}", ret);
 }
 
-pub fn day4_p2() {
+pub fn p2() {
     let input = include_str!("input/day4_input.txt");
 
     let ret = do_day4p2(input, 4);

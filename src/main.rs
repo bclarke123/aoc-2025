@@ -1,18 +1,15 @@
-use aoc_2025::day1::*;
-use aoc_2025::day2::*;
-use aoc_2025::day3::*;
-use aoc_2025::day4::*;
+use aoc_2025::*;
 
 fn main() {
-    day1_p1();
-    day1_p2();
+    day1::p1();
+    day1::p2();
 
-    day2_p1();
-    day2_p2();
+    day2::p1();
+    day2::p2();
 
-    day3_p1();
-    day3_p2();
+    day3::p1();
+    day3::p2();
 
-    day4_p1();
-    day4_p2();
+    day4::p1();
+    day4::p2();
 }
