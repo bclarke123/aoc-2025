@@ -31,13 +31,13 @@ fn remove_rolls(
             let end_x = (x + 1).min(board[y].len() - 1);
             let end_y = (y + 1).min(board.len() - 1);
 
-            'test: for (iy, row) in board.iter().enumerate().take(end_y + 1).skip(start_y) {
-                for (ix, cell) in row.iter().enumerate().take(end_x + 1).skip(start_x) {
+            'test: for iy in start_y..=end_y {
+                for ix in start_x..=end_x {
                     if iy == y && ix == x {
                         continue;
                     }
 
-                    if *cell > 0 {
+                    if board[iy][ix] > 0 {
                         neighbours += 1;
                     }
 
