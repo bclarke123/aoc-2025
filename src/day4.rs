@@ -30,14 +30,14 @@ struct Warehouse {
 
 impl Warehouse {
     fn new(input: &str, max_around: usize) -> Self {
-        let board = parse_board(input);
+        let (board, width, height) = parse_board(input);
 
         Self {
-            board: board.0,
-            width: board.1,
-            height: board.2,
-            cache: vec![],
+            board,
+            width,
+            height,
             max_around,
+            cache: vec![],
         }
     }
 
