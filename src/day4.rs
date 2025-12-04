@@ -9,9 +9,8 @@ fn parse_board(input: &str) -> Vec<Vec<usize>> {
         .collect::<Vec<_>>()
 }
 
-fn remove_rolls(board: Vec<Vec<usize>>, max_around: usize) -> (Vec<Vec<usize>>, usize) {
+fn remove_rolls(board: &mut [Vec<usize>], max_around: usize) -> usize {
     let mut ret = 0;
-    let mut new_board = board.clone();
 
     for y in 0..board.len() {
         for x in 0..board[y].len() {
@@ -34,7 +33,9 @@ fn remove_rolls(board: Vec<Vec<usize>>, max_around: usize) -> (Vec<Vec<usize>>, 
                         continue;
                     }
 
-                    neighbours += cell;
+                    if *cell > 0 {
+                        neighbours += 1;
+                    }
 
                     if neighbours >= max_around {
                         break 'test;
@@ -44,18 +45,26 @@ fn remove_rolls(board: Vec<Vec<usize>>, max_around: usize) -> (Vec<Vec<usize>>, 
 
             if neighbours < max_around {
                 ret += 1;
-                new_board[y][x] = 0;
+                board[y][x] = 2;
             }
         }
     }
 
-    (new_board, ret)
+    for row in board {
+        for cell in row {
+            if *cell == 2 {
+                *cell = 0;
+            }
+        }
+    }
+
+    ret
 }
 
 fn do_day4p1(input: &str, max_around: usize) -> usize {
-    let board = parse_board(input);
+    let mut board = parse_board(input);
 
-    remove_rolls(board, max_around).1
+    remove_rolls(&mut board, max_around)
 }
 
 fn do_day4p2(input: &str, max_around: usize) -> usize {
@@ -64,7 +73,7 @@ fn do_day4p2(input: &str, max_around: usize) -> usize {
     let mut board = parse_board(input);
 
     loop {
-        (board, last_removed) = remove_rolls(board, max_around);
+        last_removed = remove_rolls(&mut board, max_around);
         ret += last_removed;
 
         if last_removed == 0 {
