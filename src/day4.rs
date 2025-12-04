@@ -86,13 +86,11 @@ impl Warehouse {
             }
         }
 
-        let ret = self.cache.len();
-
         for i in &self.cache {
             self.board[*i] = 0;
         }
 
-        ret
+        self.cache.len()
     }
 }
 
