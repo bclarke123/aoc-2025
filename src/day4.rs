@@ -9,9 +9,12 @@ fn parse_board(input: &str) -> Vec<Vec<u8>> {
         .collect::<Vec<_>>()
 }
 
-fn remove_rolls(board: &mut [Vec<u8>], max_around: usize) -> usize {
-    let mut ret = 0;
-    let mut cache: Vec<(usize, usize)> = vec![];
+fn remove_rolls(
+    board: &mut [Vec<u8>],
+    cache: &mut Vec<(usize, usize)>,
+    max_around: usize,
+) -> usize {
+    cache.clear();
 
     for y in 0..board.len() {
         for x in 0..board[y].len() {
@@ -45,14 +48,15 @@ fn remove_rolls(board: &mut [Vec<u8>], max_around: usize) -> usize {
             }
 
             if neighbours < max_around {
-                ret += 1;
                 cache.push((y, x));
             }
         }
     }
 
+    let ret = cache.len();
+
     for (y, x) in cache {
-        board[y][x] = 0;
+        board[*y][*x] = 0;
     }
 
     ret
@@ -61,15 +65,16 @@ fn remove_rolls(board: &mut [Vec<u8>], max_around: usize) -> usize {
 fn do_day4p1(input: &str, max_around: usize) -> usize {
     let mut board = parse_board(input);
 
-    remove_rolls(&mut board, max_around)
+    remove_rolls(&mut board, &mut vec![], max_around)
 }
 
 fn do_day4p2(input: &str, max_around: usize) -> usize {
     let mut ret = 0;
     let mut board = parse_board(input);
+    let mut cache = vec![];
 
     loop {
-        let last_removed = remove_rolls(&mut board, max_around);
+        let last_removed = remove_rolls(&mut board, &mut cache, max_around);
         ret += last_removed;
 
         if last_removed == 0 {
