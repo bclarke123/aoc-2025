@@ -58,14 +58,14 @@ pub fn p1() {
     let words = include_str!("input/day1_input.txt");
 
     let count = do_day1_p1(words);
-    println!("Part 1: Count is {}", count);
+    println!("Day 1 Part 1: Count is {}", count);
 }
 
 pub fn p2() {
     let words = include_str!("input/day1_input.txt");
 
     let count = do_day1_p2(words);
-    println!("Part 2: Count is {}", count);
+    println!("Day 1 Part 2: Count is {}", count);
 }
 
 #[test]

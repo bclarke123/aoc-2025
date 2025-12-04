@@ -79,14 +79,14 @@ pub fn p1() {
     let input = include_str!("input/day4_input.txt");
 
     let ret = do_day4p1(input, 4);
-    println!("The number of accessible rolls is {}", ret);
+    println!("Day 4 Part 1: The number of accessible rolls is {}", ret);
 }
 
 pub fn p2() {
     let input = include_str!("input/day4_input.txt");
 
     let ret = do_day4p2(input, 4);
-    println!("The number of accessible rolls is {}", ret);
+    println!("Day 4 Part 2: The number of accessible rolls is {}", ret);
 }
 
 #[test]

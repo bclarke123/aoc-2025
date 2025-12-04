@@ -80,14 +80,14 @@ pub fn p1() {
     let input = include_str!("input/day2_input.txt");
 
     let ret = do_day2p1(input);
-    println!("The invalid codes add up to {}", ret);
+    println!("Day 2 Part 1: The invalid codes add up to {}", ret);
 }
 
 pub fn p2() {
     let input = include_str!("input/day2_input.txt");
 
     let ret = do_day2p2(input);
-    println!("The invalid codes add up to {}", ret);
+    println!("Day 2 Part 2: The invalid codes add up to {}", ret);
 }
 
 #[test]

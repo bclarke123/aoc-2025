@@ -51,14 +51,14 @@ pub fn p1() {
     let input = include_str!("input/day3_input.txt");
 
     let ret = do_day3p1(input);
-    println!("The sum of maximum joltages (2) is {}", ret);
+    println!("Day 3 Part 1: The sum of maximum joltages (2) is {}", ret);
 }
 
 pub fn p2() {
     let input = include_str!("input/day3_input.txt");
 
     let ret = do_day3p2(input);
-    println!("The sum of maximum joltages (12) is {}", ret);
+    println!("Day 3 Part 2: The sum of maximum joltages (12) is {}", ret);
 }
 
 #[test]
