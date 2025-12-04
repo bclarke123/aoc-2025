@@ -1,9 +1,9 @@
-fn parse_board(input: &str) -> (Vec<u8>, usize, usize) {
+fn parse_board(input: &str) -> (Vec<bool>, usize, usize) {
     let input_2d = input
         .lines()
         .map(|line| {
             line.chars()
-                .map(|c| if c == '@' { 1 } else { 0 })
+                .map(|c| c == '@')
                 .collect::<Vec<_>>()
         })
         .collect::<Vec<_>>();
@@ -21,7 +21,7 @@ fn parse_board(input: &str) -> (Vec<u8>, usize, usize) {
 }
 
 struct Warehouse {
-    board: Vec<u8>,
+    board: Vec<bool>,
     width: usize,
     height: usize,
     cache: Vec<usize>,
@@ -50,10 +50,9 @@ impl Warehouse {
 
         for y in 0..self.height {
             for x in 0..self.width {
-                let mut neighbours = 0;
                 let index = self.index(x, y);
 
-                if self.board[index] == 0 {
+                if !self.board[index] {
                     continue;
                 }
 
@@ -63,13 +62,15 @@ impl Warehouse {
                 let end_x = (x + 1).min(self.width - 1);
                 let end_y = (y + 1).min(self.height - 1);
 
+                let mut neighbours = 0;
+
                 'test: for iy in start_y..=end_y {
                     for ix in start_x..=end_x {
                         if iy == y && ix == x {
                             continue;
                         }
 
-                        if self.board[self.index(ix, iy)] > 0 {
+                        if self.board[self.index(ix, iy)] {
                             neighbours += 1;
                         }
 
@@ -86,7 +87,7 @@ impl Warehouse {
         }
 
         for i in &self.cache {
-            self.board[*i] = 0;
+            self.board[*i] = false;
         }
 
         self.cache.len()
