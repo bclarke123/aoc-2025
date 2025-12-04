@@ -28,7 +28,6 @@ fn is_invalid(input: &str, len: usize) -> bool {
         }
     }
 
-    println!("{} / {} : true", input, len);
     true
 }
 
