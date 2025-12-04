@@ -1,4 +1,4 @@
-fn parse_board(input: &str) -> Vec<Vec<usize>> {
+fn parse_board(input: &str) -> Vec<Vec<u8>> {
     input
         .lines()
         .map(|line| {
@@ -9,8 +9,9 @@ fn parse_board(input: &str) -> Vec<Vec<usize>> {
         .collect::<Vec<_>>()
 }
 
-fn remove_rolls(board: &mut [Vec<usize>], max_around: usize) -> usize {
+fn remove_rolls(board: &mut [Vec<u8>], max_around: usize) -> usize {
     let mut ret = 0;
+    let mut cache: Vec<(usize, usize)> = vec![];
 
     for y in 0..board.len() {
         for x in 0..board[y].len() {
@@ -45,17 +46,13 @@ fn remove_rolls(board: &mut [Vec<usize>], max_around: usize) -> usize {
 
             if neighbours < max_around {
                 ret += 1;
-                board[y][x] = 2;
+                cache.push((y, x));
             }
         }
     }
 
-    for row in board {
-        for cell in row {
-            if *cell == 2 {
-                *cell = 0;
-            }
-        }
+    for (y, x) in cache {
+        board[y][x] = 0;
     }
 
     ret
