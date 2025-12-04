@@ -25,11 +25,11 @@ fn remove_rolls(
                 continue;
             }
 
-            let start_x = 1.max(x) - 1;
-            let start_y = 1.max(y) - 1;
+            let start_x = x.saturating_sub(1);
+            let start_y = y.saturating_sub(1);
 
-            let end_x = (board[y].len() - 2).min(x) + 1;
-            let end_y = (board.len() - 2).min(y) + 1;
+            let end_x = (x + 1).min(board[y].len() - 1);
+            let end_y = (y + 1).min(board.len() - 1);
 
             'test: for (iy, row) in board.iter().enumerate().take(end_y + 1).skip(start_y) {
                 for (ix, cell) in row.iter().enumerate().take(end_x + 1).skip(start_x) {
