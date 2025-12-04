@@ -1,80 +1,111 @@
-fn parse_board(input: &str) -> Vec<Vec<u8>> {
-    input
+fn parse_board(input: &str) -> (Vec<u8>, usize, usize) {
+    let input_2d = input
         .lines()
         .map(|line| {
             line.chars()
                 .map(|c| if c == '@' { 1 } else { 0 })
                 .collect::<Vec<_>>()
         })
-        .collect::<Vec<_>>()
+        .collect::<Vec<_>>();
+
+    assert!(!input_2d.is_empty());
+
+    let height = input_2d.len();
+    let width = input_2d[0].len();
+
+    (
+        input_2d.iter().flatten().copied().collect::<Vec<_>>(),
+        width,
+        height,
+    )
 }
 
-fn remove_rolls(
-    board: &mut [Vec<u8>],
-    cache: &mut Vec<(usize, usize)>,
+struct Warehouse {
+    board: Vec<u8>,
+    width: usize,
+    height: usize,
+    cache: Vec<usize>,
     max_around: usize,
-) -> usize {
-    cache.clear();
+}
 
-    for y in 0..board.len() {
-        for x in 0..board[y].len() {
-            let mut neighbours = 0;
+impl Warehouse {
+    fn new(input: &str, max_around: usize) -> Self {
+        let board = parse_board(input);
 
-            let cell = board[y][x];
-            if cell == 0 {
-                continue;
-            }
-
-            let start_x = x.saturating_sub(1);
-            let start_y = y.saturating_sub(1);
-
-            let end_x = (x + 1).min(board[y].len() - 1);
-            let end_y = (y + 1).min(board.len() - 1);
-
-            'test: for iy in start_y..=end_y {
-                for ix in start_x..=end_x {
-                    if iy == y && ix == x {
-                        continue;
-                    }
-
-                    if board[iy][ix] > 0 {
-                        neighbours += 1;
-                    }
-
-                    if neighbours >= max_around {
-                        break 'test;
-                    }
-                }
-            }
-
-            if neighbours < max_around {
-                cache.push((y, x));
-            }
+        Self {
+            board: board.0,
+            width: board.1,
+            height: board.2,
+            cache: vec![],
+            max_around,
         }
     }
 
-    let ret = cache.len();
-
-    for (y, x) in cache {
-        board[*y][*x] = 0;
+    fn index(&self, x: usize, y: usize) -> usize {
+        y * self.width + x
     }
 
-    ret
+    fn remove_rolls(&mut self) -> usize {
+        self.cache.clear();
+
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let mut neighbours = 0;
+                let index = self.index(x, y);
+
+                let cell = self.board[index];
+                if cell == 0 {
+                    continue;
+                }
+
+                let start_x = x.saturating_sub(1);
+                let start_y = y.saturating_sub(1);
+
+                let end_x = (x + 1).min(self.width - 1);
+                let end_y = (y + 1).min(self.height - 1);
+
+                'test: for iy in start_y..=end_y {
+                    for ix in start_x..=end_x {
+                        if iy == y && ix == x {
+                            continue;
+                        }
+
+                        if self.board[self.index(ix, iy)] > 0 {
+                            neighbours += 1;
+                        }
+
+                        if neighbours >= self.max_around {
+                            break 'test;
+                        }
+                    }
+                }
+
+                if neighbours < self.max_around {
+                    self.cache.push(index);
+                }
+            }
+        }
+
+        let ret = self.cache.len();
+
+        for i in &self.cache {
+            self.board[*i] = 0;
+        }
+
+        ret
+    }
 }
 
 fn do_day4p1(input: &str, max_around: usize) -> usize {
-    let mut board = parse_board(input);
-
-    remove_rolls(&mut board, &mut vec![], max_around)
+    Warehouse::new(input, max_around).remove_rolls()
 }
 
 fn do_day4p2(input: &str, max_around: usize) -> usize {
     let mut ret = 0;
-    let mut board = parse_board(input);
-    let mut cache = vec![];
+    let mut warehouse = Warehouse::new(input, max_around);
 
     loop {
-        let last_removed = remove_rolls(&mut board, &mut cache, max_around);
+        let last_removed = warehouse.remove_rolls();
         ret += last_removed;
 
         if last_removed == 0 {
