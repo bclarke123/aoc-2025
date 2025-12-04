@@ -53,8 +53,7 @@ impl Warehouse {
                 let mut neighbours = 0;
                 let index = self.index(x, y);
 
-                let cell = self.board[index];
-                if cell == 0 {
+                if self.board[index] == 0 {
                     continue;
                 }
 
