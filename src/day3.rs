@@ -8,17 +8,27 @@ fn get_joltages(bank: &str) -> Vec<u64> {
         .collect::<Vec<_>>()
 }
 
-fn max_joltages(bank: Vec<u64>, _digits: usize) -> u64 {
-    let mut hi_val = 0;
+fn max_joltages(bank: Vec<u64>, digits: usize) -> u64 {
+    let mut stack: Vec<u64> = vec![];
 
-    for a in 0..bank.len() {
-        for b in a + 1..bank.len() {
-            let val = bank[a] * 10 + bank[b];
-            hi_val = hi_val.max(val)
+    for (i, &digit) in bank.iter().enumerate() {
+        while let Some(&top) = stack.last() {
+            let remaining = bank.len() - i;
+            let current_stack = stack.len();
+
+            if digit > top && current_stack - 1 + remaining >= digits {
+                stack.pop();
+            } else {
+                break;
+            }
+        }
+
+        if stack.len() < digits {
+            stack.push(digit);
         }
     }
 
-    hi_val
+    stack.iter().fold(0, |acc, x| acc * 10 + x)
 }
 
 fn do_day3p1(input: &str) -> u64 {

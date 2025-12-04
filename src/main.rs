@@ -10,4 +10,5 @@ fn main() {
     day2_p2();
 
     day3_p1();
+    day3_p2();
 }
