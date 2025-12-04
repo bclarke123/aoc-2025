@@ -69,11 +69,10 @@ fn do_day4p1(input: &str, max_around: usize) -> usize {
 
 fn do_day4p2(input: &str, max_around: usize) -> usize {
     let mut ret = 0;
-    let mut last_removed;
     let mut board = parse_board(input);
 
     loop {
-        last_removed = remove_rolls(&mut board, max_around);
+        let last_removed = remove_rolls(&mut board, max_around);
         ret += last_removed;
 
         if last_removed == 0 {
