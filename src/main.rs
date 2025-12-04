@@ -1,6 +1,7 @@
 use aoc_2025::day1::*;
 use aoc_2025::day2::*;
 use aoc_2025::day3::*;
+use aoc_2025::day4::*;
 
 fn main() {
     day1_p1();
@@ -11,4 +12,6 @@ fn main() {
 
     day3_p1();
     day3_p2();
+
+    day4_p1();
 }
