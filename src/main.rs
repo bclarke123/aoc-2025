@@ -6,4 +6,5 @@ fn main() {
     day1_p2();
 
     day2_p1();
+    day2_p2();
 }
