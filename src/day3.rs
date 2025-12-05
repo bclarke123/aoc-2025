@@ -13,10 +13,11 @@ fn max_joltages(bank: Vec<u64>, digits: usize) -> u64 {
 
     for (i, &digit) in bank.iter().enumerate() {
         while let Some(&top) = stack.last() {
-            let remaining = bank.len() - i;
             let current_stack = stack.len();
+            let remaining = bank.len() - i;
+            let min_remaining = current_stack + remaining - 1;
 
-            if digit > top && current_stack - 1 + remaining >= digits {
+            if digit > top && digits <= min_remaining {
                 stack.pop();
             } else {
                 break;
