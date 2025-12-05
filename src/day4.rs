@@ -1,11 +1,7 @@
 fn parse_board(input: &str) -> (Vec<bool>, usize, usize) {
     let input_2d = input
         .lines()
-        .map(|line| {
-            line.chars()
-                .map(|c| c == '@')
-                .collect::<Vec<_>>()
-        })
+        .map(|line| line.chars().map(|c| c == '@').collect::<Vec<_>>())
         .collect::<Vec<_>>();
 
     assert!(!input_2d.is_empty());
