@@ -5,25 +5,27 @@ struct Food {
 
 impl Food {
     fn new(input: &str) -> Self {
-        let lines = input.lines().collect::<Vec<_>>();
+        let mut lines = input.lines();
 
-        let fresh = lines.iter().take_while(|line| !line.is_empty())
-            .map(|line| line.split_once('-').unwrap())
-            .map(|(lo, hi)| (lo.parse().unwrap(), hi.parse().unwrap()))
+        let fresh = lines
+            .by_ref()
+            .take_while(|line| !line.is_empty())
+            .map(|line| {
+                let (lo, hi) = line.split_once('-').unwrap();
+                (lo.parse().unwrap(), hi.parse().unwrap())
+            })
             .collect::<Vec<(usize, usize)>>();
 
-        let available = lines.iter().skip(fresh.len() + 1).map(|x| x.parse().unwrap()).collect::<Vec<usize>>();
+        let available = lines.map(|x| x.parse().unwrap()).collect::<Vec<usize>>();
 
-        Self {
-            fresh,
-            available
-        }
+        Self { fresh, available }
     }
 
     fn enumerate(&self) -> Vec<(usize, bool)> {
-        self.available.iter().map(|&n| {
-            (n, self.fresh.iter().any(|(lo, hi)| n >= *lo && n <= *hi))
-        }).collect::<Vec<_>>()
+        self.available
+            .iter()
+            .map(|&n| (n, self.fresh.iter().any(|(lo, hi)| n >= *lo && n <= *hi)))
+            .collect::<Vec<_>>()
     }
 
     fn total_fresh(&mut self) -> u64 {
@@ -59,7 +61,10 @@ impl Food {
 
 fn do_part1(input: &str) -> usize {
     let food = Food::new(input);
-    food.enumerate().iter().filter(|(_, is_fresh)| *is_fresh).count()
+    food.enumerate()
+        .iter()
+        .filter(|(_, is_fresh)| *is_fresh)
+        .count()
 }
 
 fn do_part2(input: &str) -> u64 {
