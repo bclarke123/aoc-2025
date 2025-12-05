@@ -14,4 +14,5 @@ fn main() {
     day4::p2();
 
     day5::p1();
+    day5::p2();
 }
