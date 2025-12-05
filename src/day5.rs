@@ -24,7 +24,7 @@ impl Food {
     fn enumerate(&self) -> Vec<(usize, bool)> {
         self.available
             .iter()
-            .map(|&n| (n, self.fresh.iter().any(|(lo, hi)| n >= *lo && n <= *hi)))
+            .map(|n| (*n, self.fresh.iter().any(|&(lo, hi)| (lo..=hi).contains(n))))
             .collect::<Vec<_>>()
     }
 
