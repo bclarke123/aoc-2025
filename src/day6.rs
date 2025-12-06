@@ -19,8 +19,7 @@ impl Board {
         let numbers_2d = lines[..lines.len() - 1]
             .iter()
             .map(|l| {
-                l.trim()
-                    .split_whitespace()
+                l.split_whitespace()
                     .map(|w| w.trim().parse::<u64>().unwrap())
                     .collect::<Vec<_>>()
             })
@@ -81,7 +80,10 @@ struct Board2 {
 
 impl Board2 {
     fn new(input: &str) -> Self {
-        let chars = input.lines().map(|l| l.chars().collect::<Vec<_>>()).collect::<Vec<_>>();
+        let chars = input
+            .lines()
+            .map(|l| l.chars().collect::<Vec<_>>())
+            .collect::<Vec<_>>();
         let words = chars.last().unwrap();
         let width = chars.iter().map(|n| n.len()).max().unwrap();
 
@@ -92,25 +94,35 @@ impl Board2 {
             let c = words.get(i).unwrap_or(&' ');
 
             if *c != ' ' && i > 0 {
-                let x = buf.iter().filter_map(|s| s.trim().parse::<u64>().ok()).rev().collect::<Vec<_>>();
+                let x = buf
+                    .iter()
+                    .filter_map(|s| s.trim().parse::<u64>().ok())
+                    .collect::<Vec<_>>();
 
                 numbers.push(x);
                 buf.clear();
             }
 
-            let next_str = chars[..chars.len() - 1].iter().map(|line| line.get(i).unwrap_or(&' ')).collect::<String>();
+            let next_str = chars[..chars.len() - 1]
+                .iter()
+                .map(|line| line.get(i).unwrap_or(&' '))
+                .collect::<String>();
             buf.push(next_str);
         }
 
-        let x = buf.iter().filter_map(|s| s.trim().parse::<u64>().ok()).collect::<Vec<_>>();
+        let x = buf
+            .iter()
+            .filter_map(|s| s.trim().parse::<u64>().ok())
+            .collect::<Vec<_>>();
         numbers.push(x);
 
-        let operators = words.iter().copied().filter(|x| *x != ' ').collect::<Vec<_>>();
+        let operators = words
+            .iter()
+            .copied()
+            .filter(|x| *x != ' ')
+            .collect::<Vec<_>>();
 
-        Self {
-            numbers,
-            operators,
-        }
+        Self { numbers, operators }
     }
 
     fn solve(&self) -> u64 {
@@ -124,7 +136,6 @@ impl Board2 {
 
         ret
     }
-
 }
 
 fn do_day6p2(input: &str) -> u64 {
