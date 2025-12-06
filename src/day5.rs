@@ -21,11 +21,11 @@ impl Food {
         Self { fresh, available }
     }
 
-    fn enumerate(&self) -> Vec<(usize, bool)> {
+    fn fresh_available(&self) -> usize {
         self.available
             .iter()
-            .map(|n| (*n, self.fresh.iter().any(|&(lo, hi)| (lo..=hi).contains(n))))
-            .collect::<Vec<_>>()
+            .filter(|n| self.fresh.iter().any(|&(lo, hi)| (lo..=hi).contains(n)))
+            .count()
     }
 
     fn total_fresh(&mut self) -> u64 {
@@ -33,26 +33,21 @@ impl Food {
 
         let mut combined = Vec::<(usize, usize)>::new();
 
-        for &cur in &self.fresh {
-            let lo = cur.0;
-            let hi = cur.1;
-
-            let prev = combined.pop();
-
-            if prev.is_none() {
+        for &(lo, hi) in &self.fresh {
+            if combined.is_empty() {
                 combined.push((lo, hi));
                 continue;
             }
 
-            let prev = prev.unwrap();
+            let (plo, phi) = combined.pop().unwrap();
 
-            if prev.1 < lo {
-                combined.push(prev);
+            if phi < lo {
+                combined.push((plo, phi));
                 combined.push((lo, hi));
                 continue;
             }
 
-            combined.push((prev.0, hi.max(prev.1)));
+            combined.push((plo, hi.max(phi)));
         }
 
         combined.iter().map(|(lo, hi)| (hi - lo + 1) as u64).sum()
@@ -60,11 +55,7 @@ impl Food {
 }
 
 fn do_part1(input: &str) -> usize {
-    let food = Food::new(input);
-    food.enumerate()
-        .iter()
-        .filter(|(_, is_fresh)| *is_fresh)
-        .count()
+    Food::new(input).fresh_available()
 }
 
 fn do_part2(input: &str) -> u64 {
