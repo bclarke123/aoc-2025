@@ -33,10 +33,7 @@ impl Food {
 
         let mut combined = Vec::<(usize, usize)>::new();
 
-        for &cur in &self.fresh {
-            let lo = cur.0;
-            let hi = cur.1;
-
+        for &(lo, hi) in &self.fresh {
             let prev = combined.pop();
 
             if prev.is_none() {
