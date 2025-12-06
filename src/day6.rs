@@ -58,19 +58,18 @@ impl Board {
     fn op(&self, x: usize, lh: u64, rh: u64) -> u64 {
         op(self.operators[x], lh, rh)
     }
-}
 
-fn do_day6p1(input: &str) -> u64 {
-    let board = Board::new(input);
-    (0..board.width)
-        .map(|x| {
-            board
-                .numbers(x)
-                .iter()
-                .skip(1)
-                .fold(board.num(x, 0), |acc, &n| board.op(x, acc, n))
-        })
-        .sum()
+    fn solve(&self) -> u64 {
+        (0..self.width)
+            .map(|x| {
+                self
+                    .numbers(x)
+                    .iter()
+                    .skip(1)
+                    .fold(self.num(x, 0), |acc, &n| self.op(x, acc, n))
+            })
+            .sum()
+    }
 }
 
 struct Board2 {
@@ -84,14 +83,14 @@ impl Board2 {
             .lines()
             .map(|l| l.chars().collect::<Vec<_>>())
             .collect::<Vec<_>>();
-        let words = chars.last().unwrap();
+        let operators = chars.last().unwrap();
         let width = chars.iter().map(|n| n.len()).max().unwrap();
 
         let mut numbers: Vec<Vec<u64>> = vec![];
         let mut buf: Vec<String> = vec![];
 
         for i in 0..width {
-            let c = words.get(i).unwrap_or(&' ');
+            let c = operators.get(i).unwrap_or(&' ');
 
             if *c != ' ' && i > 0 {
                 let x = buf
@@ -116,7 +115,7 @@ impl Board2 {
             .collect::<Vec<_>>();
         numbers.push(x);
 
-        let operators = words
+        let operators = operators
             .iter()
             .copied()
             .filter(|x| *x != ' ')
@@ -138,9 +137,12 @@ impl Board2 {
     }
 }
 
+fn do_day6p1(input: &str) -> u64 {
+    Board::new(input).solve()
+}
+
 fn do_day6p2(input: &str) -> u64 {
-    let board = Board2::new(input);
-    board.solve()
+    Board2::new(input).solve()
 }
 
 pub fn p1() {
