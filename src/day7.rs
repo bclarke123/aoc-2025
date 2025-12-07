@@ -1,0 +1,96 @@
+#[derive(Debug)]
+struct Board {
+    start: usize,
+    width: usize,
+    splitters: Vec<bool>,
+}
+
+impl Board {
+    fn new(input: &str) -> Self {
+        let mut chars = input.lines();
+        let start_line = chars.by_ref().next().unwrap();
+
+        let start = start_line.chars().position(|c| c == 'S').unwrap();
+        let width = start_line.len();
+
+        let splitters = chars
+            .flat_map(|line| line.chars().map(|c| c == '^').collect::<Vec<_>>())
+            .collect::<Vec<_>>();
+
+        Self {
+            start,
+            width,
+            splitters,
+        }
+    }
+
+    fn is_splitter(&self, x: usize, y: usize) -> bool {
+        self.splitters[y * self.width + x]
+    }
+
+    fn add(&self, beam: &mut Vec<usize>, index: usize) {
+        if !beam.contains(&index) {
+            beam.push(index);
+        }
+    }
+
+    fn solve(&self) -> u64 {
+        let height = self.splitters.len() / self.width;
+        let mut beams = vec![self.start];
+        let mut ret = 0;
+
+        for y in 0..height {
+            let mut row_beams = vec![];
+
+            for beam in beams {
+                if self.is_splitter(beam, y) {
+                    ret += 1;
+                    self.add(&mut row_beams, beam + 1);
+                    self.add(&mut row_beams, beam - 1);
+                } else {
+                    self.add(&mut row_beams, beam);
+                }
+            }
+
+            beams = row_beams;
+        }
+
+        ret
+    }
+
+    fn solve_p2(&self) -> u64 {
+        0
+    }
+}
+
+fn do_day7p1(input: &str) -> u64 {
+    Board::new(input).solve()
+}
+
+fn do_day7p2(input: &str) -> u64 {
+    Board::new(input).solve_p2()
+}
+
+pub fn p1() {
+    let input = include_str!("input/day7_input.txt");
+
+    let ret = do_day7p1(input);
+
+    println!("Day 7 Part 1: The beam splits {} times", ret);
+}
+
+#[test]
+fn test_day7p1() {
+    let input = include_str!("input/day7_example.txt");
+
+    let ret = do_day7p1(input);
+    assert_eq!(ret, 21);
+}
+
+#[test]
+fn test_day7p2() {
+    let input = include_str!("input/day7_example.txt");
+
+    let ret = do_day7p2(input);
+    assert_eq!(ret, 21);
+}
