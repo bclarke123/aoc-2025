@@ -30,8 +30,12 @@ impl Board {
         self.splitters.len() / self.width
     }
 
+    fn index(&self, x: usize, y: usize) -> usize {
+        y * self.width + x
+    }
+
     fn is_splitter(&self, x: usize, y: usize) -> bool {
-        self.splitters[y * self.width + x]
+        self.splitters[self.index(x, y)]
     }
 
     fn add(&self, beam: &mut Vec<usize>, index: usize) {
@@ -72,7 +76,7 @@ impl Board {
             return splits + 1;
         }
 
-        let index = y * self.width + beam;
+        let index = self.index(beam, y);
         if cache.contains_key(&index) {
             return cache[&index];
         }
