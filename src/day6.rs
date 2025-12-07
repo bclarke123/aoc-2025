@@ -62,8 +62,7 @@ impl Board {
     fn solve(&self) -> u64 {
         (0..self.width)
             .map(|x| {
-                self
-                    .numbers(x)
+                self.numbers(x)
                     .iter()
                     .skip(1)
                     .fold(self.num(x, 0), |acc, &n| self.op(x, acc, n))

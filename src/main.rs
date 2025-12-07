@@ -20,5 +20,5 @@ fn main() {
     day6::p2();
 
     day7::p1();
-    // day7::p2();
+    day7::p2();
 }
