@@ -50,19 +50,18 @@ impl Board {
         let mut ret = 0;
 
         for y in 0..height {
-            let mut row_beams = vec![];
+            let n_beams = beams.len();
 
-            for beam in beams {
+            for _ in 0..n_beams {
+                let beam = beams.remove(0);
                 if self.is_splitter(beam, y) {
                     ret += 1;
-                    self.add(&mut row_beams, beam + 1);
-                    self.add(&mut row_beams, beam - 1);
+                    self.add(&mut beams, beam + 1);
+                    self.add(&mut beams, beam - 1);
                 } else {
-                    self.add(&mut row_beams, beam);
+                    self.add(&mut beams, beam);
                 }
             }
-
-            beams = row_beams;
         }
 
         ret
