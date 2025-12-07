@@ -77,19 +77,17 @@ impl Board {
         }
 
         let index = self.index(beam, y);
-        if cache.contains_key(&index) {
-            return cache[&index];
+        if !cache.contains_key(&index) {
+            let ret = if self.is_splitter(beam, y) {
+                self.path(next_y, beam - 1, splits, cache) + self.path(next_y, beam + 1, splits, cache)
+            } else {
+                self.path(next_y, beam, splits, cache)
+            };
+
+            cache.insert(index, ret);
         }
 
-        let ret = if self.is_splitter(beam, y) {
-            self.path(next_y, beam - 1, splits, cache) + self.path(next_y, beam + 1, splits, cache)
-        } else {
-            self.path(next_y, beam, splits, cache)
-        };
-
-        cache.insert(index, ret);
-
-        ret
+        cache[&index]
     }
 
     fn solve_p2(&self) -> u64 {
