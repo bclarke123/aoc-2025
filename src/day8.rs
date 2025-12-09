@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 struct Vector {
     x: i64,
     y: i64,
@@ -19,10 +21,10 @@ impl Vector {
 }
 
 fn parse_input(input: &str) -> Vec<Vector> {
-    input.lines().map(|line| Vector::parse(line)).collect()
+    input.lines().map(Vector::parse).collect()
 }
 
-fn find_distances(input: &Vec<Vector>) -> Vec<(usize, usize)> {
+fn find_distances(input: &[Vector]) -> Vec<(usize, usize)> {
     let mut ret = vec![];
 
     for a in 0..input.len() {
@@ -43,63 +45,78 @@ fn find_distances(input: &Vec<Vector>) -> Vec<(usize, usize)> {
     ret
 }
 
-fn add(circuit: &mut Vec<usize>, value: usize) {
-    if !circuit.contains(&value) {
-        circuit.push(value);
-    }
+struct UnionFind {
+    parent: Vec<usize>,
+    groups: usize,
 }
 
-fn construct_circuits(pairs: &[(usize, usize)])  -> Vec<Vec<usize>> {
-    let mut circuits = Vec::<Vec<usize>>::new();
-
-    for (a, b) in pairs {
-        let mut added = false;
-
-        'circuit: for i in 0..circuits.len() {
-            let circuit = &circuits[i];
-
-            for n in [(a, b), (b, a)] {
-                if circuit.contains(n.0) {
-                    for x in 0..circuits.len() {
-                        if i == x {
-                            continue;
-                        }
-
-                        if circuits[x].contains(n.1) {
-                            let mut cx = circuits.remove(x);
-                            circuits[i].append(&mut cx);
-                            added = true;
-
-                            break 'circuit;
-                        }
-                    }
-
-                    add(&mut circuits[i], *n.1);
-                    added = true;
-
-                    break 'circuit;
-                }
-            }
-        }
-
-        if !added {
-            circuits.push(vec![*a, *b]);
+impl UnionFind {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..n).collect(),
+            groups: n,
         }
     }
 
-    circuits.sort_unstable_by_key(|circuit| circuit.len());
-    circuits.reverse();
+    fn find(&mut self, i: usize) -> usize {
+        if self.parent[i] == i {
+            i
+        } else {
+            let root = self.find(self.parent[i]);
+            self.parent[i] = root;
+            root
+        }
+    }
 
-    return circuits;
+    fn union(&mut self, i: usize, j: usize) -> bool {
+        let root_i = self.find(i);
+        let root_j = self.find(j);
+
+        if root_i != root_j {
+            self.parent[root_i] = root_j;
+            self.groups -= 1;
+            true
+        } else {
+            false
+        }
+    }
 }
 
 fn do_day8p1(input: &str, iterations: usize) -> usize {
     let vecs = parse_input(input);
     let pairs = find_distances(&vecs);
-    let closest = &pairs[0..iterations];
-    let circuits = construct_circuits(closest);
+    let mut tally = HashMap::<usize, usize>::new();
+    let mut uf = UnionFind::new(vecs.len());
 
-    circuits[..3].into_iter().fold(1, |a, c| a * c.len())
+    for &(a, b) in pairs.iter().take(iterations) {
+        uf.union(a, b);
+    }
+
+    for i in 0..vecs.len() {
+        let root = uf.find(i);
+        *tally.entry(root).or_insert(0) += 1;
+    }
+
+    let mut sizes = tally.values().copied().collect::<Vec<_>>();
+    sizes.sort_unstable();
+
+    sizes.iter().rev().take(3).product()
+}
+
+fn do_day8p2(input: &str) -> i64 {
+    let vecs = parse_input(input);
+    let pairs = find_distances(&vecs);
+    let mut uf = UnionFind::new(vecs.len());
+    let mut ret = 0;
+
+    for (a, b) in pairs {
+        if uf.union(a, b) && uf.groups == 1 {
+            ret = vecs[a].x * vecs[b].x;
+            break;
+        }
+    }
+
+    ret
 }
 
 pub fn p1() {
@@ -110,12 +127,28 @@ pub fn p1() {
     println!("Day 8 Part 1: The largest circuits multiply to {}", ret);
 }
 
+pub fn p2() {
+    let input = include_str!("input/day8_input.txt");
+
+    let ret = do_day8p2(input);
+
+    println!("Day 8 Part 2: The final circuit X values multiply to {}", ret);
+}
+
 #[test]
 fn test_day8part1() {
     let input = include_str!("input/day8_example.txt");
     let ret = do_day8p1(input, 10);
 
     assert_eq!(ret, 40);
+}
+
+#[test]
+fn test_day8part2() {
+    let input = include_str!("input/day8_example.txt");
+    let ret = do_day8p2(input);
+
+    assert_eq!(ret, 25272);
 }
 
 #[test]
