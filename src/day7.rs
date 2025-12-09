@@ -67,20 +67,20 @@ impl Board {
         ret
     }
 
-    fn path(&self, x: usize, y: usize, splits: u64, cache: &mut HashMap<usize, u64>) -> u64 {
+    fn path(&self, x: usize, y: usize, cache: &mut HashMap<usize, u64>) -> u64 {
         let height = self.height();
         let next_y = y + 1;
 
         if next_y >= height {
-            return splits + 1;
+            return 1;
         }
 
         let index = self.index(x, y);
         if !cache.contains_key(&index) {
             let ret = if self.is_splitter(x, y) {
-                self.path(x - 1, next_y, splits, cache) + self.path(x + 1, next_y, splits, cache)
+                self.path(x - 1, next_y, cache) + self.path(x + 1, next_y, cache)
             } else {
-                self.path(x, next_y, splits, cache)
+                self.path(x, next_y, cache)
             };
 
             cache.insert(index, ret);
@@ -90,7 +90,7 @@ impl Board {
     }
 
     fn solve_p2(&self) -> u64 {
-        self.path(self.start, 0, 0, &mut HashMap::new())
+        self.path(self.start, 0, &mut HashMap::new())
     }
 }
 
