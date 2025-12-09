@@ -22,31 +22,6 @@ impl Vector {
     }
 }
 
-fn parse_input(input: &str) -> Vec<Vector> {
-    input.lines().map(Vector::parse).collect()
-}
-
-fn find_distances(input: &[Vector]) -> Vec<(usize, usize)> {
-    let mut ret = vec![];
-
-    for a in 0..input.len() {
-        for b in 0..input.len() {
-            if a == b {
-                continue;
-            }
-
-            ret.push((a.min(b), a.max(b)));
-        }
-    }
-
-    ret.sort();
-    ret.dedup();
-
-    ret.sort_unstable_by_key(|(a, b)| input[*a].distance(&input[*b]));
-
-    ret
-}
-
 struct UnionFind {
     parent: Vec<usize>,
     groups: usize,
@@ -82,6 +57,31 @@ impl UnionFind {
             false
         }
     }
+}
+
+fn parse_input(input: &str) -> Vec<Vector> {
+    input.lines().map(Vector::parse).collect()
+}
+
+fn find_distances(input: &[Vector]) -> Vec<(usize, usize)> {
+    let mut ret = vec![];
+
+    for a in 0..input.len() {
+        for b in 0..input.len() {
+            if a == b {
+                continue;
+            }
+
+            ret.push((a.min(b), a.max(b)));
+        }
+    }
+
+    ret.sort();
+    ret.dedup();
+
+    ret.sort_unstable_by_key(|(a, b)| input[*a].distance(&input[*b]));
+
+    ret
 }
 
 fn do_day8p1(input: &str, iterations: usize) -> usize {
