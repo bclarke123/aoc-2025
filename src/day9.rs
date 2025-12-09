@@ -1,5 +1,3 @@
-use std::u64;
-
 fn parse_input(input: &str) -> Vec<(u64, u64)> {
     input.lines()
         .map(|l| l.split_once(',').unwrap())
