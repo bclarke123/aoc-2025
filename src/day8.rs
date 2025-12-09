@@ -16,7 +16,9 @@ impl Vector {
     }
 
     fn distance(&self, other: &Vector) -> i64 {
-        ((self.x - other.x).pow(2) + (self.y - other.y).pow(2) + (self.z - other.z).pow(2)).abs().isqrt()
+        ((self.x - other.x).pow(2) + (self.y - other.y).pow(2) + (self.z - other.z).pow(2))
+            .abs()
+            .isqrt()
     }
 }
 
@@ -132,7 +134,10 @@ pub fn p2() {
 
     let ret = do_day8p2(input);
 
-    println!("Day 8 Part 2: The final circuit X values multiply to {}", ret);
+    println!(
+        "Day 8 Part 2: The final circuit X values multiply to {}",
+        ret
+    );
 }
 
 #[test]
